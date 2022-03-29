@@ -1,6 +1,5 @@
-if not game.Loaded then
-    local Loaded = game.Loaded
-    repeat task.wait() until Loaded
+if not game:IsLoaded() then
+    repeat task.wait() until game:IsLoaded()
 end
 
 local Player = game:GetService("Players").LocalPlayer
