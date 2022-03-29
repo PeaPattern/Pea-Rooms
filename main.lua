@@ -55,7 +55,7 @@ local function findServer(theid)
     if #newServers == 0 then return "All servers are full or no other servers available." end
     Server = newServers[#newServers]
     TeleportService:TeleportToPlaceInstance(theid, Server.id)
-    syn.queue_on_teleport('loadstring(game:HttpGet("https://raw.githubusercontent.com/PeaPattern/Pea-Rooms/main/main.lua"))')
+    syn.queue_on_teleport('loadstring(game:HttpGet("https://raw.githubusercontent.com/PeaPattern/Pea-Rooms/main/main.lua"))()')
     return "Sucessfully teleported."
 end
 
