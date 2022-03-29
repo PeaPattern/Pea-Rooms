@@ -44,6 +44,7 @@ local Floors = {
     {"fridge", 8656240402},
 }
 
+syn.queue_on_teleport('loadstring(game:HttpGet("https://raw.githubusercontent.com/PeaPattern/Pea-Rooms/main/main.lua"))()')
 local function findServer(theid)
     local Info = JSONDecode(HttpService, game.HttpGetAsync(game, string.format("https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=Asc&limit=100", theid)))
     local Servers = Info.data
@@ -57,7 +58,6 @@ local function findServer(theid)
     if #newServers == 0 then return "All servers are full or no other servers available." end
     Server = newServers[#newServers]
     TeleportService:TeleportToPlaceInstance(theid, Server.id)
-    syn.queue_on_teleport('loadstring(game:HttpGet("https://raw.githubusercontent.com/PeaPattern/Pea-Rooms/main/main.lua"))()')
     return "Sucessfully teleported."
 end
 
