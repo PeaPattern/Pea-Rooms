@@ -62,7 +62,7 @@ local function findServer(theid)
 end
 
 local function Notify(Description)
-    game.StarterGui:SetCore( "ChatMakeSystemMessage",  { Text = string.format("[SYSTEM] %s", Description), Color = Color3.fromRGB( 0,255,0 ), Font = Enum.Font.GothamBold, FontSize = Enum.FontSize.Size24 } )
+    game.StarterGui:SetCore( "ChatMakeSystemMessage",  { Text = string.format("[SYSTEM]: %s", Description), Color = Color3.fromRGB( 0,255,0 ), Font = Enum.Font.GothamBold, FontSize = Enum.FontSize.Size24 } )
 end
 
 local Commands = {}
