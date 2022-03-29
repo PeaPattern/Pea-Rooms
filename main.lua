@@ -134,6 +134,7 @@ addCommand("commands", {"cmds"}, "Lists out commands.", function(Message, Args)
     for _,v in pairs(Commands) do
         local Name = v[1]
     end
+    return Final
 end)
 
 Player.Chatted:Connect(function(Message)
