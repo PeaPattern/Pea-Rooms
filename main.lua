@@ -129,6 +129,10 @@ addCommand("fixlighting", {"restorelighting", "fl", "rl"}, "Removes annoying fog
     return "Fixed lighting successfully."
 end)
 
+addCommand("code", {}, "Gives you the code for the computer in level 15", function(Message, Args)
+    return "34942"
+end)
+
 addCommand("commands", {"cmds"}, "Lists out commands.", function(Message, Args)
     local Final = ""
     for _,v in pairs(Commands) do
