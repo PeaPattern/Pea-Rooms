@@ -12,8 +12,11 @@ local JSONDecode = HttpService.JSONDecode
 local Prefix = ":"
 
 local Remotes = {
-    AlmondWater = game:GetService("ReplicatedStorage").SanityEvents.AlmondWater
+    AlmondWater = "no"
 }
+if game:GetService("ReplicatedStorage"):FindFirstChild("SanityEvents") and game:GetService("ReplicatedStorage").SanityEvents:FindFirstChild("AlmondWater") then
+    Remotes.AlmondWater = game:GetService("ReplicatedStorage").SanityEvents.AlmondWater
+end
 
 local Floors = {
     {"0", 7648148853},
