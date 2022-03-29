@@ -133,6 +133,11 @@ addCommand("commands", {"cmds"}, "Lists out commands.", function(Message, Args)
     local Final = ""
     for _,v in pairs(Commands) do
         local Name = v[1]
+        if _ ~= #Commands then
+            Final = Final .. Name .. ", "
+        else
+            Final = Final .. Name
+        end
     end
     return Final
 end)
