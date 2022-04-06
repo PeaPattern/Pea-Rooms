@@ -8,6 +8,7 @@ local Camera = workspace.CurrentCamera
 local TeleportService = game:GetService("TeleportService")
 local HttpService = game:GetService("HttpService")
 local JSONDecode = HttpService.JSONDecode
+local qot = syn.queue_on_teleport or queue_on_teleport or false
 local Prefix = ":"
 
 local Remotes = {
@@ -44,7 +45,7 @@ local Floors = {
     {"fridge", 8656240402},
 }
 
-syn.queue_on_teleport('loadstring(game:HttpGet("https://raw.githubusercontent.com/PeaPattern/Pea-Rooms/main/main.lua"))()')
+qot('loadstring(game:HttpGet("https://raw.githubusercontent.com/PeaPattern/Pea-Rooms/main/main.lua"))()')
 local function findServer(theid)
     local Info = JSONDecode(HttpService, game.HttpGetAsync(game, string.format("https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=Asc&limit=100", theid)))
     local Servers = Info.data
