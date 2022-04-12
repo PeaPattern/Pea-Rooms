@@ -12,7 +12,7 @@ local queue_on_teleport = syn and syn.queue_on_teleport or queue_on_teleport
 local Prefix = ":"
 
 local Remotes = {
-    AlmondWater = "no"
+    AlmondWater = nil
 }
 if game:GetService("ReplicatedStorage"):FindFirstChild("SanityEvents") and game:GetService("ReplicatedStorage").SanityEvents:FindFirstChild("AlmondWater") then
     Remotes.AlmondWater = game:GetService("ReplicatedStorage").SanityEvents.AlmondWater
@@ -42,7 +42,7 @@ local Floors = {
     {"188", 8592506349},
     {"hub", 7662894222},
     {"thebackroom", 8246789981},
-    {"fridge", 8656240402},
+    {"fridge", 8656240402}
 }
 
 queue_on_teleport('loadstring(game:HttpGet("https://raw.githubusercontent.com/PeaPattern/Pea-Rooms/main/main.lua"))()')
@@ -63,15 +63,19 @@ local function findServer(theid)
 end
 
 local function Notify(Description)
+    wait()
     game.StarterGui:SetCore( "ChatMakeSystemMessage",  { Text = string.format("[SYSTEM]: %s", Description), Color = Color3.fromRGB( 0,255,0 ), Font = Enum.Font.GothamBold, FontSize = Enum.FontSize.Size24 } )
 end
 
 local Commands = {}
 local function addCommand(Name, Aliases, Description, Func)
-    table.insert(Commands, {Name, Aliases, Func})
+    table.insert(Commands, {Name, Aliases, Func, Description})
 end
 
 Notify(string.format("Welcome ADMIN, %s (@%s)!", Player.Name, Player.DisplayName))
+Player.CameraMode = Enum.CameraMode.Classic
+Player.CameraMaxZoomDistance = 999
+Camera.CameraType = Enum.CameraType.Track
 
 addCommand("tp", {"level", "floor", "to", "teleport"}, "Teleports you to your desired floor.", function(Message, Args)
     if #Args >= 2 then
@@ -92,13 +96,21 @@ addCommand("sanity", {"snt"}, "Adds sanity to local player.", function(Message, 
     if #Args >= 2 then
         if tonumber(Args[2]) then
             if tonumber(Args[2]) <= 10000 then
-                for i=1,math.round( tonumber( Args[2] ) / 40) do
-                    Remotes.AlmondWater:FireServer()
+                if Remotes.AlmondWater then
+                    for i=1,tonumber( Args[2] ) * 40 do
+                        Remotes.AlmondWater:FireServer()
+                    end
+                else
+                    return "No almond water remote."
                 end
                 return "Successfully added sanity."
             else
-                for i=1,math.round( tonumber( 10000 ) / 40) do
-                    Remotes.AlmondWater:FireServer()
+                if Remotes.AlmondWater then
+                    for i=1,tonumber( 10000 ) * 40 do
+                        Remotes.AlmondWater:FireServer()
+                    end
+                else
+                    return "No almond water remote."
                 end
                 return "Number was too large to change, instead set to 10000."
             end
@@ -110,14 +122,6 @@ addCommand("sanity", {"snt"}, "Adds sanity to local player.", function(Message, 
     end
 end)
 
-addCommand("thirdperson", {"tdpn", "zoom"}, "Allows zooming/third person on local player.", function(Message, Args)
-    Player.CameraMode = Enum.CameraMode.Classic
-    Player.CameraMaxZoomDistance = 999
-    Camera.CameraType = Enum.CameraType.Track
-    task.wait()
-    return "Successfully third person."
-end)
-
 addCommand("fixlighting", {"restorelighting", "fl", "rl"}, "Removes annoying fog and restore the lighting to it's default.", function(Message, Args)
     Lighting:ClearAllChildren()
     Lighting.FogEnd = 100000
@@ -126,7 +130,6 @@ addCommand("fixlighting", {"restorelighting", "fl", "rl"}, "Removes annoying fog
     Lighting.Brightness = 1
     Lighting.Ambient = Color3.fromRGB(182,182,182)
     Lighting.OutdoorAmbient = Color3.fromRGB(102,102,102)
-    task.wait()
     return "Fixed lighting successfully."
 end)
 
@@ -147,19 +150,55 @@ addCommand("commands", {"cmds"}, "Lists out commands.", function(Message, Args)
     return Final
 end)
 
+addCommand("info", {}, "Gives information on a command.", function(Message, Args)
+    if #Args >= 2 then
+        local infoCommand = Args[2]
+        for _,v in pairs(Commands) do
+            local Name = v[1]
+            local Aliases = v[2]
+            local Desc = v[4]
+            local strAliases = ""
+            
+            for i,x in pairs(Aliases) do
+                if i <= #Aliases then
+                    strAliases = strAliases .. x .. ", "
+                else
+                    strAliases = strAliases .. x
+                end
+            end
+            
+            if infoCommand:lower() == Name:lower() then
+                return string.format("Name: %s\nAliases: %s\nDescription: %s", Name, strAliases, Desc)
+            end
+            return "Invalid command argument. (2)"
+        end
+    else
+        return "Invalid command argument."
+    end
+end)
+
 Player.Chatted:Connect(function(Message)
     for _,v in pairs(Commands) do
         local Name = v[1]
         local Aliases = v[2]
         local Func = v[3]
         local Split = string.split(Message, " ")
+        local weirdo = Split[1] .. " " .. Split[2]
         if Split[1]:lower() == Prefix:lower() .. Name:lower() then
             local Result = Func(Message, Split)
+            if Result then Notify(Result) end
+        elseif weirdo:lower() == "/e " .. Prefix:lower() .. Name:lower() then
+            local newSplit = string.Split(Message:sub(3), " ")
+            local Result = Func(Message, newSplit)
             if Result then Notify(Result) end
         end
         for i,Alias in pairs(Aliases) do
             if Split[1]:lower() == Prefix:lower() .. Alias:lower() then
                 local Result = Func(Message, Split)
+                if Result then Notify(Result) end
+            elseif weirdo:lower() == "/e " .. Prefix:lower() .. Alias:lower() then
+                local newSplit = string.Split(Message:sub(3), " ")
+                local Result = Func(Message, newSplit)
                 if Result then Notify(Result) end
             end
         end
@@ -171,5 +210,7 @@ end)
 --:sanity {amount}
 --:thirdperson
 --:fixlighting
+--:code
 --:cmds
+--:info {cmd}
 --->> PeaPattern#2703 enjoy <<---
